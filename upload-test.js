@@ -26,9 +26,6 @@ var desiredCaps = {
   deviceName:         'Galaxy A8',
   platformVersion:    '5.1.1',
   platformName:       'Android' 
-//   appPackage:         'com.facebook.f8',
-//   appActivity:        'com.facebook.f8.MainActivity',
-//   waitAppPackage:     'com.facebook.f8',
 }
 
 async function main() {
