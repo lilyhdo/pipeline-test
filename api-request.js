@@ -2,13 +2,12 @@ import 'babel-polyfill'
 import 'colors'
 import fs from 'fs'
 import request from 'request'
-import {USERNAME, API_KEY} from './config'
 
-const ROOT_DIR = '/Users/lilydo/Downloads'
-const FILE_NAME = "KMSDirectory_2_2.6.apk"
+const ROOT_DIR = configs.ROOT_DIR 
+const FILE_NAME = configs.FILE_NAME
 const APK_DIR = `${ROOT_DIR}/${FILE_NAME}`
-const username = USERNAME
-const apiKey = API_KEY
+const username = configs.USERNAME 
+const apiKey = configs.API_KEY 
 
 var basicAuth = "Basic " + new Buffer(username + ":" + apiKey).toString("base64");
 console.log(`Params: ${username} - ${apiKey}`)
@@ -16,14 +15,14 @@ main()
 
 function main() {
   generateUrl(function (url, path) {
-  UploadToS3(url, path)
+  console.log(UploadToS3(url, path))
   })
 }
 
-function generateUrl(callback) {
+async function generateUrl(callback) {
   const inputBody = {
     //Uncomment the line below if you want to upload app instead of creating a new one
-    //"addId": ???,
+    //"appId": ???,
     "filename": FILE_NAME
   };
   const headers = {
@@ -45,7 +44,7 @@ function generateUrl(callback) {
   })
 }
 
-function UploadToS3(url, appPath) {
+async function UploadToS3(url, appPath) {
   console.log('Flow can come here')
   var stats = fs.statSync(APK_DIR);
   const option = {
@@ -64,11 +63,11 @@ function UploadToS3(url, appPath) {
       console.log('error:',err)
     }
     console.log('UPLOAD TO S3 DONE')
-    createAppVer(appPath) //<---- Create app version on Kobiton after uploading to S3
+    return createAppVer(appPath) //<---- Create app version on Kobiton after uploading to S3
   }));
 }
 
-function createAppVer(appPath) {
+async function createAppVer(appPath) {
   const request = require('request');
   const inputBody = {
     "filename": FILE_NAME,
@@ -90,5 +89,20 @@ function createAppVer(appPath) {
 
     console.log('App has successfully uploaded to Kobiton')
     console.log('Response body:', body);
+    return body.appId
   });
 }
+
+var methods = {
+	generateUrl: function() {
+		console.log('A presigned URL and app path have been generated.');
+	},
+	UploadToS3: function() {
+		console.log('App file has been uploaded to S3.');
+  },
+  createAppVer: function() {
+    console.log('App has been uploaded.')
+  }
+};
+
+exports.data = methods;
