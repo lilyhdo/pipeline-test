@@ -14,6 +14,7 @@
     "slack-test": "mocha --require babel-core/register --no-timeouts slack-test.js",
     "xamarin-app-test": "mocha --require babel-core/register --no-timeouts xamarin-app-test.js",
     "api-request": "mocha --require babel-core/register --no-timeouts api-request.js"
+    "upload-test": "mocha --require babel-core/register --no-timeouts upload-test.js"
   },
   "keywords": [
     "kobiton",
